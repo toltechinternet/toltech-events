@@ -36,6 +36,21 @@ function uep_admin_script_style( $hook ) {
             '1.10.4',
             'all'
         );
+
+        wp_enqueue_script(
+            'Time Picker JS',
+            SCRIPTS . 'jquery.ui.timepicker.js',
+            '1.0',
+            true
+        );
+ 
+        wp_enqueue_style(
+            'Time Picker CSS',
+            STYLES . 'jquery.ui.timepicker.css',
+            false,
+            '1.10.4',
+            'all'
+        );
     }
 }
 add_action( 'admin_enqueue_scripts', 'uep_admin_script_style' );
@@ -103,6 +118,7 @@ function uep_render_event_info_metabox( $post ) {
     $event_start_date = get_post_meta( $post->ID, 'event-start-date', true );
     $event_end_date = get_post_meta( $post->ID, 'event-end-date', true );
     $event_venue = get_post_meta( $post->ID, 'event-venue', true );
+    $event_time = get_post_meta( $post->ID, 'event-time', true );
    
     $event_address = get_post_meta( $post->ID, 'event-address', true );
     $event_town = get_post_meta( $post->ID, 'event-town', true );
@@ -124,7 +140,10 @@ function uep_render_event_info_metabox( $post ) {
 	        <input style="margin-bottom: 10px;" class="widefat uep-event-date-input" id="uep-event-end-date" type="text" name="uep-event-end-date" placeholder="Format: February 18, 2014" value="<?php echo date( 'F d, Y', $event_end_date ); ?>" />
  
 	<label for="uep-event-venue"><?php _e( 'Event Venue:', 'uep' ); ?></label>
-	        <input style="margin-bottom: 10px;" class="widefat" id="uep-event-venue" type="text" name="uep-event-venue" placeholder="eg. Times Square" value="<?php echo $event_venue; ?>" /><br /><br />
+	        <input style="margin-bottom: 10px;" class="widefat" id="uep-event-venue" type="text" name="uep-event-venue" placeholder="eg. Times Square" value="<?php echo $event_venue; ?>" />
+    
+   <label for="uep-event-time"><?php _e( 'Event Time:', 'uep' ); ?></label>
+            <input style="margin-bottom: 10px;" class="widefat" id="uep-event-time" type="text" name="uep-event-time" placeholder="eg. 1:00pm" value="<?php echo $event_time; ?>" /><br /><br />
     
     <label for="uep-event-address"><?php _e( 'Address:', 'uep' ); ?></label>
             <input style="margin-bottom: 10px;" class="widefat" id="uep-event-address" type="text" name="uep-event-address" placeholder="eg. 22 Pottery Street" value="<?php echo $event_address; ?>" />
@@ -175,6 +194,10 @@ function uep_save_event_info( $post_id ) {
  
     if ( isset( $_POST['uep-event-venue'] ) ) {
         update_post_meta( $post_id, 'event-venue', sanitize_text_field( $_POST['uep-event-venue'] ) );
+    }
+
+    if ( isset( $_POST['uep-event-time'] ) ) {
+        update_post_meta( $post_id, 'event-time', sanitize_text_field( $_POST['uep-event-time'] ) );
     }
 
     if ( isset( $_POST['uep-event-address'] ) ) {

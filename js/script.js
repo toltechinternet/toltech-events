@@ -13,5 +13,10 @@
             $( '#uep-event-start-date' ).datepicker( 'option', 'maxDate', selectedDate );
         }
     });
+
+    $('#uep-event-time').timepicker({
+        showPeriod: true,
+        showLeadingZero: true
+    });
  
 })( jQuery );
