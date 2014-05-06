@@ -58,7 +58,8 @@ function uep_custom_post_type() {
     $supports = array(
         'title',
         'editor',
-        'excerpt'
+        'excerpt',
+        'thumbnail'
     );
  
     $args = array(
@@ -83,12 +84,13 @@ add_action( 'init', 'uep_custom_post_type' );
 function uep_add_event_info_metabox() {
     add_meta_box(
         'uep-event-info-metabox',
-        __( 'Event Info', 'uep' ),
+        __( 'Event Information', 'uep' ),
         'uep_render_event_info_metabox',
         'event',
         'side',
         'core'
     );
+
 }
 add_action( 'add_meta_boxes', 'uep_add_event_info_metabox' );
 
@@ -101,6 +103,11 @@ function uep_render_event_info_metabox( $post ) {
     $event_start_date = get_post_meta( $post->ID, 'event-start-date', true );
     $event_end_date = get_post_meta( $post->ID, 'event-end-date', true );
     $event_venue = get_post_meta( $post->ID, 'event-venue', true );
+   
+    $event_address = get_post_meta( $post->ID, 'event-address', true );
+    $event_town = get_post_meta( $post->ID, 'event-town', true );
+    $event_postcode = get_post_meta( $post->ID, 'event-postcode', true );
+    $event_country = get_post_meta( $post->ID, 'event-country', true );
  
     // if there is previously saved value then retrieve it, else set it to the current time
     $event_start_date = ! empty( $event_start_date ) ? $event_start_date : time();
@@ -111,14 +118,27 @@ function uep_render_event_info_metabox( $post ) {
     ?>
  
 	<label for="uep-event-start-date"><?php _e( 'Event Start Date:', 'uep' ); ?></label>
-	        <input class="widefat uep-event-date-input" id="uep-event-start-date" type="text" name="uep-event-start-date" placeholder="Format: February 18, 2014" value="<?php echo date( 'F d, Y', $event_start_date ); ?>" />
+	        <input style="margin-bottom: 10px;" class="widefat uep-event-date-input" id="uep-event-start-date" type="text" name="uep-event-start-date" placeholder="Format: February 18, 2014" value="<?php echo date( 'F d, Y', $event_start_date ); ?>" />
  
-	<label for="uep-event-end-date"><?php _e( 'Event End Date:', 'uep' ); ?></label>
-	        <input class="widefat uep-event-date-input" id="uep-event-end-date" type="text" name="uep-event-end-date" placeholder="Format: February 18, 2014" value="<?php echo date( 'F d, Y', $event_end_date ); ?>" />
+	<label or="uep-event-end-date"><?php _e( 'Event End Date:', 'uep' ); ?></label>
+	        <input style="margin-bottom: 10px;" class="widefat uep-event-date-input" id="uep-event-end-date" type="text" name="uep-event-end-date" placeholder="Format: February 18, 2014" value="<?php echo date( 'F d, Y', $event_end_date ); ?>" />
  
 	<label for="uep-event-venue"><?php _e( 'Event Venue:', 'uep' ); ?></label>
-	        <input class="widefat" id="uep-event-venue" type="text" name="uep-event-venue" placeholder="eg. Times Square" value="<?php echo $event_venue; ?>" />
- 
+	        <input style="margin-bottom: 10px;" class="widefat" id="uep-event-venue" type="text" name="uep-event-venue" placeholder="eg. Times Square" value="<?php echo $event_venue; ?>" /><br /><br />
+    
+    <label for="uep-event-address"><?php _e( 'Address:', 'uep' ); ?></label>
+            <input style="margin-bottom: 10px;" class="widefat" id="uep-event-address" type="text" name="uep-event-address" placeholder="eg. 22 Pottery Street" value="<?php echo $event_address; ?>" />
+   
+    <label for="uep-event-town"><?php _e( 'Town:', 'uep' ); ?></label>
+            <input style="margin-bottom: 10px;" class="widefat" id="uep-event-town" type="text" name="uep-event-town" placeholder="eg. Greenock" value="<?php echo $event_town; ?>" />
+   
+    <label for="uep-event-postcode"><?php _e( 'Postcode:', 'uep' ); ?></label>
+            <input style="margin-bottom: 10px;"class="widefat" id="uep-event-postcode" type="text" name="uep-event-postcode" placeholder="eg. PA15 2UZ" value="<?php echo $event_postcode; ?>" />
+   
+    <label for="uep-event-country"><?php _e( 'Country:', 'uep' ); ?></label>
+            <input style="margin-bottom: 10px;" class="widefat" id="uep-event-country" type="text" name="uep-event-country" placeholder="eg. Scotland" value="<?php echo $event_country; ?>" />
+
+    
 <?php } ?>
 
 
@@ -155,6 +175,22 @@ function uep_save_event_info( $post_id ) {
  
     if ( isset( $_POST['uep-event-venue'] ) ) {
         update_post_meta( $post_id, 'event-venue', sanitize_text_field( $_POST['uep-event-venue'] ) );
+    }
+
+    if ( isset( $_POST['uep-event-address'] ) ) {
+        update_post_meta( $post_id, 'event-address', sanitize_text_field( $_POST['uep-event-address'] ) );
+    }
+    
+    if ( isset( $_POST['uep-event-town'] ) ) {
+        update_post_meta( $post_id, 'event-town', sanitize_text_field( $_POST['uep-event-town'] ) );
+    }
+    
+    if ( isset( $_POST['uep-event-postcode'] ) ) {
+        update_post_meta( $post_id, 'event-postcode', sanitize_text_field( $_POST['uep-event-postcode'] ) );
+    }
+    
+    if ( isset( $_POST['uep-event-country'] ) ) {
+        update_post_meta( $post_id, 'event-country', sanitize_text_field( $_POST['uep-event-country'] ) );
     }
 }
 add_action( 'save_post', 'uep_save_event_info' );
